@@ -6,10 +6,11 @@
 </head>
 <body>
     <main>
-        <h1>Playfair Cipher</h1>
+        <h1>Affine Cipher</h1>
         <div id=input_section>
         <input id="plainField" type="text" placeholder="Plain Text">
-        <input id="keyField" type="text", placeholder="Key Text">
+        <input id="keyM" type="text", placeholder="Key M">
+        <input id="keyB" type="text", placeholder="Key B">
         <input id="cipherField" type="text" placeholder="Cipher Text">
         <br>
         <input id="encryptButton" type="submit" value="Encrypt">
@@ -21,15 +22,17 @@
     <script>
         $("#encryptButton").click(() => {
             let plain = $("#plainField").val();
-            let key = $("#keyField").val();
-            $.get("./playfair/encrypt", {text: plain, key: key}).done(data => {
+            let M = $("#keyM").val();
+            let B = $("#keyB").val();
+            $.get("./affine/encrypt", {text: plain, keyM: M, keyB: B}).done(data => {
                 $("#cipherField").val(data)
             });
         })
         $("#decryptButton").click(() => {
             let cipher = $("#cipherField").val();
-            let key = $("#keyField").val();
-            $.get("./playfair/decrypt", {text: cipher, key: key}).done(data => {
+            let M = $("#keyM").val();
+            let B = $("#keyB").val();
+            $.get("./affine/decrypt", {text: cipher, keyM: M, keyB: B}).done(data => {
                 $("#plainField").val(data)
             });
         })

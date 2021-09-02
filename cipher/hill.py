@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.sparse.linalg as sc
 
 ALFABET = [
     'A',
@@ -66,9 +65,6 @@ def reversekey(key):
     rev = np.linalg.inv(key)
     det = np.linalg.det(key)
     inv = pow(int(round(det % N)), -1, N)
-    print(inv)
-    print(det)
-    print(rev)
     size = len(key)
     for i in range(size):
         for j in range(size):
