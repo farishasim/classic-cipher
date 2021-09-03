@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Classic Cipher</title>
-    </head>
-    <body>
-        <h1>Classic Cipher</h1>
-        <a href="/vigenere">Vigenere Cipher</a><br>
-        <a href="/playfair">Playfair Cipher</a><br>
-        <a href="/affine">Affine Cipher</a><br>
-    </body>
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <title>Classic Cipher</title>
+</head>
+
+<body>
+<nav class="navbar bg-secondary bg-gradient d-flex justify-content-around">
+  <div>
+    <h1 class="text-light">Classic Cipher</h1>
+  </div>
+</nav>
+<div class="container">
+  <div class="col">
+    <div class="row">
+      <a href="/vigenere">Vigenere Cipher</a><br>
+      <a href="/playfair">Playfair Cipher</a><br>
+      <a href="/affine">Affine Cipher</a><br>
+    </div>
+  </div>
+  {% block body %} {% endblock %}
+</div>
+</body>
 </html>
