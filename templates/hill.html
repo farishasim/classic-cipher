@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Classic Cipher</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <main>
+        <h1>Hill Cipher</h1>
+        <div id=input_section>
+            <input id="plainField" type="text" placeholder="Plain Text">
+            <div id="key_section">
+                <input id="sizeField" type="number" min="1" placeholder="Ukuran Kunci">
+                <input id="sizeButton" type="submit" value="Pilih">
+                <div id="keyMatrix"></div>
+            </div>
+            <input id="cipherField" type="text" placeholder="Cipher Text">
+            <br>
+            <input id="encryptButton" type="submit" value="Encrypt" disabled>
+            <input id="decryptButton" type="submit" value="Decrypt" disabled>
+            <br>
+        </div>
+        <a href="../">Back</a>
+    </main>
+    <script>
+        $("#encryptButton").click(() => {
+            let plain = $("#plainField").val();
+            $.get("./hill/encrypt", {text: plain}).done(data => {
+                $("#cipherField").val(data)
+            });
+        })
+        $("#decryptButton").click(() => {
+            let cipher = $("#cipherField").val();
+            $.get("./hill/decrypt", {text: cipher}).done(data => {
+                $("#plainField").val(data)
+            });
+        })
+        $("#sizeButton").click(() => {
+            $("#keyMatrix").empty()
+            let size = $("#sizeField").val();
+            for (let i = 0; i < size; i++) {
+                let newElmt = ''
+                for (let j = 0; j < size; j++) {
+                    newElmt += `<input class="keyElmt" id="key-${i*size+j}" type="number" min="0" placeholder="K-${i},${j}">`
+                }
+                newElmt += '<br>'
+                $("#keyMatrix").append(newElmt)
+            }
+            let saveButton = '<input id="saveKey" type="submit" value="Save Key">'
+            let updateButton = '<input id="updateKey" type="submit" value="Change Key" disabled>'
+            $("#keyMatrix").append(saveButton,updateButton)
+            $("#saveKey").click(() => {
+                $("#warning").remove()
+                let size = $("#sizeField").val()
+                for(let i = 0; i < size*size; i++) {
+                    console.log($(`#key-${i}`).val())
+                    if ($(`#key-${i}`).val() === "") {
+                        $("#keyMatrix").append('<p id="warning" style="color:red">Kunci harus terisi sepenuhnya</p>')
+                        return;
+                    }
+                }
+                document.getElementById("sizeButton").setAttribute("disabled", "")
+                document.getElementById("sizeField").setAttribute("disabled", "")
+                document.getElementById("saveKey").setAttribute("disabled", "")
+                for (let i = 0; i < size*size; i++) {
+                    document.getElementById(`key-${i}`).setAttribute("disabled", "")
+                }
+                document.getElementById("updateKey").removeAttribute("disabled")
+                document.getElementById("encryptButton").removeAttribute("disabled")
+                document.getElementById("decryptButton").removeAttribute("disabled")
+            })
+            $("#updateKey").click(() => {
+                document.getElementById("sizeButton").removeAttribute("disabled")
+                document.getElementById("sizeField").removeAttribute("disabled")
+                document.getElementById("saveKey").removeAttribute("disabled")
+                for (let i = 0; i < size*size; i++) {
+                    document.getElementById(`key-${i}`).removeAttribute("disabled")
+                }
+                document.getElementById("updateKey").setAttribute("disabled", "")
+                document.getElementById("encryptButton").setAttribute("disabled", "")
+                document.getElementById("decryptButton").setAttribute("disabled", "")
+            })
+        })
+    </script>
+</body>
+</html>

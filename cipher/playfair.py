@@ -58,19 +58,14 @@ def d_bigram(p1,p2,mat):
     
     return mat[i1][j2], mat[i2][j1]
 
-def encrypt(plaintext:str, key:str):
-
-    ciphertext = ""
-
+def preprocess(text, key):
     # strip all blanks, j, J an punctuation.
-    plaintext = "".join(c for c in plaintext if c not in ' ,.?!(){}')
+    text = "".join(c for c in text if c not in ' ,.?!(){}')
     key = "".join(c for c in key if c not in ' ,.?!(){}jJ')
-    
     # to uppercase
-    plaintext = plaintext.upper()
-    plaintext = plaintext.replace('J', 'I')
+    text = text.upper()
+    text = text.replace('J', 'I')
     key = key.upper()
-
     # create key matrix
     # remove multiple occurences
     newkey = ""
@@ -78,98 +73,59 @@ def encrypt(plaintext:str, key:str):
         if c not in newkey:
             newkey += c
     key = newkey
-
     # add all remaining alfabet
     for c in ALFABET:
         if c not in key:
             key += c
-
     mat = [[key[KEYSIZE*i+j] for j in range(KEYSIZE)] for i in range(KEYSIZE)]
+    return text, mat
 
+def encrypt(plaintext:str, key:str):
+    ciphertext = ""
+    plaintext, mat = preprocess(plaintext, key)
     i = 0
     n = len(plaintext)
     while i < n:
         if i+1 < n:
-            if plaintext[i] == plaintext[i+1]:
+            if plaintext[i] == plaintext[i+1]: # jika bigram kembar
                 plaintext = plaintext[:i+1] + 'X' + plaintext[i+1:]
                 n += 1
         else: 
             # akhir ganjil
             plaintext += 'X'
-        
         c1, c2 = e_bigram(plaintext[i], plaintext[i+1], mat)
-
         ciphertext += c1 + c2
-
         i += 2
-
     return ciphertext
 
 
 def decrypt(ciphertext, key):
-
     plaintext = ""
-
-    # strip all blanks, j, J an punctuation.
-    ciphertext = "".join(c for c in ciphertext if c not in ' ,.?!(){}')
-    key = "".join(c for c in key if c not in ' ,.?!(){}jJ')
-    
-    # to uppercase
-    ciphertext = ciphertext.upper()
-    ciphertext = ciphertext.replace('J', 'I')
-    key = key.upper()
-
-    # create key matrix
-    # remove multiple occurences
-    newkey = ""
-    for c in key:
-        if c not in newkey:
-            newkey += c
-    key = newkey
-
-    # add all remaining alfabet
-    for c in ALFABET:
-        if c not in key:
-            key += c
-
-    mat = [[key[KEYSIZE*i+j] for j in range(KEYSIZE)] for i in range(KEYSIZE)]
-
+    ciphertext, mat = preprocess(ciphertext, key)
     i = 0
     n = len(ciphertext)
     while i < n:
         if i+1 < n:
-            if ciphertext[i] == ciphertext[i+1]:
+            if ciphertext[i] == ciphertext[i+1]: # jika bigram kembar
                 ciphertext = ciphertext[:i+1] + 'X' + ciphertext[i+1:]
                 n += 1
         else: 
             # akhir ganjil
             ciphertext += 'X'
-        
         c1, c2 = d_bigram(ciphertext[i], ciphertext[i+1], mat)
-
         plaintext += c1 + c2
-
         i += 2
-
     return plaintext
 
 if __name__ == "__main__":
-
     choice = input()
-
     if choice == "c":
-
         plaintext = input("Masukkan plaintext: ")
         key = input("Masukkan key: ")
-
         ciphertext = encrypt(plaintext, key)
-
         print(ciphertext)
-
     else :
         ciphertext = input("Masukkan ciphertext: ")
         key = input("Masukkan key: ")
-
         plaintext = decrypt(ciphertext, key)
-
         print(plaintext)
