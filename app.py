@@ -1,5 +1,6 @@
 from flask import *
-from cipher import playfair, affine
+from cipher import playfair, affine, hill
+import json
 
 app = Flask(__name__)
 
@@ -47,6 +48,34 @@ def affine_decrypt():
 @app.route('/hill')
 def hill_page():
     return render_template("hill.html")
+
+@app.route("/hill/keycheck", methods = ["POST"])
+def hill_check():
+    key = request.form.get("key")
+    key = json.loads(key)
+    size = int(request.form.get("size"))
+    keymat = [[int(key[i*size+j]) for j in range(size)] for i in range(size)]
+    if hill.keycheck(keymat) :
+        return "ok"
+    return "Not ok"
+
+@app.route("/hill/encrypt", methods=["POST"])
+def hill_encrypt():
+    plain = request.form.get("text")
+    size = int(request.form.get("size"))
+    key = request.form.get("key")
+    key = json.loads(key)
+    keymat = [[int(key[i*size+j]) for j in range(size)] for i in range(size)]
+    return hill.encrypt(plain, keymat)
+
+@app.route("/hill/decrypt", methods=["POST"])
+def hill_decrypt():
+    cipher = request.form.get("text")
+    size = int(request.form.get("size"))
+    key = request.form.get("key")
+    key = json.loads(key)
+    keymat = [[int(key[i*size+j]) for j in range(size)] for i in range(size)]
+    return hill.decrypt(cipher, keymat)
 
 if __name__ == "__main__":
     app.run(debug=True)

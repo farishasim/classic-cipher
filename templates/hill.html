@@ -3,6 +3,11 @@
 <head>
     <title>Classic Cipher</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        input {
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
     <main>
@@ -25,13 +30,25 @@
     <script>
         $("#encryptButton").click(() => {
             let plain = $("#plainField").val();
-            $.get("./hill/encrypt", {text: plain}).done(data => {
+            let size = $("#sizeField").val();
+            let key = [];
+            for(let i = 0; i < size * size; i++){
+                key[i] = $(`#key-${i}`).val();
+            }
+            let keystr = JSON.stringify(key)
+            $.post("./hill/encrypt", {text: plain, key: keystr, size: size}).done(data => {
                 $("#cipherField").val(data)
             });
         })
         $("#decryptButton").click(() => {
             let cipher = $("#cipherField").val();
-            $.get("./hill/decrypt", {text: cipher}).done(data => {
+            let size = $("#sizeField").val();
+            let key = [];
+            for(let i = 0; i < size * size; i++){
+                key[i] = $(`#key-${i}`).val();
+            }
+            let keystr = JSON.stringify(key)
+            $.post("./hill/decrypt", {text: cipher, key: keystr, size: size}).done(data => {
                 $("#plainField").val(data)
             });
         })
@@ -52,13 +69,26 @@
             $("#saveKey").click(() => {
                 $("#warning").remove()
                 let size = $("#sizeField").val()
+                // check apakah semua kunci sudah terisi
                 for(let i = 0; i < size*size; i++) {
-                    console.log($(`#key-${i}`).val())
                     if ($(`#key-${i}`).val() === "") {
                         $("#keyMatrix").append('<p id="warning" style="color:red">Kunci harus terisi sepenuhnya</p>')
                         return;
                     }
                 }
+                // check apakah kunci invertible
+                let key = [];
+                for(let i = 0; i < size * size; i++){
+                    key[i] = $(`#key-${i}`).val();
+                }
+                let result;
+                let keystr = JSON.stringify(key);
+                $.post("./hill/keycheck", {key: keystr, size: size}).done(data => {
+                if (data !== "ok"){
+                    $("#keyMatrix").append('<p id="warning" style="color:red">Kunci harus invertible</p>')
+                    return;
+                }
+                // update buttons
                 document.getElementById("sizeButton").setAttribute("disabled", "")
                 document.getElementById("sizeField").setAttribute("disabled", "")
                 document.getElementById("saveKey").setAttribute("disabled", "")
@@ -68,6 +98,7 @@
                 document.getElementById("updateKey").removeAttribute("disabled")
                 document.getElementById("encryptButton").removeAttribute("disabled")
                 document.getElementById("decryptButton").removeAttribute("disabled")
+                })
             })
             $("#updateKey").click(() => {
                 document.getElementById("sizeButton").removeAttribute("disabled")
