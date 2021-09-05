@@ -1,39 +1,18 @@
 {% extends 'home.html' %}
 
 {% block body %}
-<form action="/vigenere" method="GET">
-  <input type="radio" name="vMode" id="simpleVigenere" value="simpleVigenere" onclick="vigenere_page()">
-  <label for="simpleVigenere">Simple Vigenère</label>
-  <input type="radio" name="vMode" id="autoKeyVigenere" value="autoKeyVigenere" onclick="vigenere_page()">
-  <label for="autoKeyVigenere">Auto-key Vigenère</label>
-  <input type="radio" name="vMode" id="fullVigenere" value="fullVigenere" onclick="vigenere_page()">
-  <label for="fullVigenere">Full Vigenère</label>
-  <input type="radio" name="vMode" id="extendedVigenere" value="extendedVigenere" onclick="vigenere_page()">
-  <label for="extendedVigenere">Extended Vigenère</label>
-  <button type="submit" name="vMode" id="submitVMode">Select</button>
-</form>
-
-<!-- <select name="cars" id="cars">
-  <option value="volvo">Volvo</option>
-  <option value="saab">Saab</option>
-  <option value="mercedes">Mercedes</option>
-  <option value="audi">Audi</option>
-</select> -->
-
-{% if mode == "simpleVigenere" %}
-  <h3>simpleVigenere</h3>
-{% elif mode == "autoKeyVigenere" %}
-  <h3>autoKeyVigenere</h3>
-{% elif mode == "fullVigenere" %}
-  <h3>fullVigenere</h3>
-{% elif mode == "extendedVigenere" %}
-  <h3>extendedVigenere</h3>
-{% else %}
-  <h3>not checked</h3>
-{% endif %}
-
 <form action="/vigenere" method="POST">
-  <input type="text" name="" id="">
+  <input type="submit" name="vigenere_mode" value="simpleVigenere">
+  <input type="submit" name="vigenere_mode" value="autoKeyVigenere">
+  <input type="submit" name="vigenere_mode" value="fullVigenere">
+  <input type="submit" name="vigenere_mode" value="extendedVigenere">
 </form>
+
+
+
+{% block vigenere %}
+
+{% endblock %}
+
 
 {% endblock %}
