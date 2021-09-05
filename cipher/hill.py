@@ -57,7 +57,7 @@ def encrypt(plaintext, key):
                 c[i] += (key[i][j] * ALFABET.index(plaintext[p+j]))
         for i in range(keysize):
             ciphertext += ALFABET[ c[i] % N ]
-        p += 3
+        p += keysize
     return ciphertext
 
 def reversekey(key):
@@ -77,10 +77,14 @@ def decrypt(ciphertext, key):
     reversedkey = reversekey(key)
     return encrypt(ciphertext, reversedkey)
 
+def keycheck(key):
+    return np.linalg.det(key) != 0
+
 if __name__ == "__main__":
     choice = input()
     if choice == "c":
         plaintext = input("Masukkan plaintext: ")
+        KEY = [[1,0],[0,1]]
         ciphertext = encrypt(plaintext, KEY)
         print(ciphertext)
     else :
