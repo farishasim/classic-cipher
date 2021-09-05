@@ -13,7 +13,12 @@
     <main>
         <h1>Playfair Cipher</h1>
         <div id=input_section>
-        <input id="plainField" type="text" placeholder="Plain Text">
+        <form action = "/upload/playfair" method = "POST" 
+        enctype = "multipart/form-data">
+            <input type = "file" name = "file" />
+            <input id="inputFile" type = "submit"/>
+        </form>
+        <input id="plainField" type="text" placeholder="Plain Text" value="{{ fileContent }}">
         <input id="keyField" type="text", placeholder="Key Text">
         <input id="cipherField" type="text" placeholder="Cipher Text">
         <br>
@@ -27,14 +32,14 @@
         $("#encryptButton").click(() => {
             let plain = $("#plainField").val();
             let key = $("#keyField").val();
-            $.get("./playfair/encrypt", {text: plain, key: key}).done(data => {
+            $.get("/playfair/encrypt", {text: plain, key: key}).done(data => {
                 $("#cipherField").val(data)
             });
         })
         $("#decryptButton").click(() => {
             let cipher = $("#cipherField").val();
             let key = $("#keyField").val();
-            $.get("./playfair/decrypt", {text: cipher, key: key}).done(data => {
+            $.get("/playfair/decrypt", {text: cipher, key: key}).done(data => {
                 $("#plainField").val(data)
             });
         })

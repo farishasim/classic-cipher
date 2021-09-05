@@ -13,7 +13,12 @@
     <main>
         <h1>Hill Cipher</h1>
         <div id=input_section>
-            <input id="plainField" type="text" placeholder="Plain Text">
+            <form action = "/upload/hill" method = "POST" 
+            enctype = "multipart/form-data">
+                <input type = "file" name = "file" />
+                <input id="inputFile" type = "submit" value="Submit"/>
+            </form>
+            <input id="plainField" type="text" placeholder="Plain Text" value="{{fileContent}}">
             <div id="key_section">
                 <input id="sizeField" type="number" min="1" placeholder="Ukuran Kunci">
                 <input id="sizeButton" type="submit" value="Pilih">
@@ -36,7 +41,7 @@
                 key[i] = $(`#key-${i}`).val();
             }
             let keystr = JSON.stringify(key)
-            $.post("./hill/encrypt", {text: plain, key: keystr, size: size}).done(data => {
+            $.post("/hill/encrypt", {text: plain, key: keystr, size: size}).done(data => {
                 $("#cipherField").val(data)
             });
         })
@@ -48,7 +53,7 @@
                 key[i] = $(`#key-${i}`).val();
             }
             let keystr = JSON.stringify(key)
-            $.post("./hill/decrypt", {text: cipher, key: keystr, size: size}).done(data => {
+            $.post("/hill/decrypt", {text: cipher, key: keystr, size: size}).done(data => {
                 $("#plainField").val(data)
             });
         })
@@ -83,7 +88,7 @@
                 }
                 let result;
                 let keystr = JSON.stringify(key);
-                $.post("./hill/keycheck", {key: keystr, size: size}).done(data => {
+                $.post("/hill/keycheck", {key: keystr, size: size}).done(data => {
                 if (data !== "ok"){
                     $("#keyMatrix").append('<p id="warning" style="color:red">Kunci harus invertible</p>')
                     return;

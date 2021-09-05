@@ -1,5 +1,6 @@
 from flask import *
 from cipher import playfair, affine, hill
+from werkzeug.utils import secure_filename
 import json
 
 app = Flask(__name__)
@@ -76,6 +77,17 @@ def hill_decrypt():
     key = json.loads(key)
     keymat = [[int(key[i*size+j]) for j in range(size)] for i in range(size)]
     return hill.decrypt(cipher, keymat)
+
+
+@app.route('/upload/<cipher>', methods = ['GET', 'POST'])
+def upload_file(cipher):
+    if request.method == 'POST':
+        f = request.files['file']
+        f.save(secure_filename(f"{cipher}-input.txt"))
+        f = open(f"{cipher}-input.txt")
+        return render_template(f"{cipher}.html", fileContent=f.read())
+    return home();
+
 
 if __name__ == "__main__":
     app.run(debug=True)

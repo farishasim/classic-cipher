@@ -13,7 +13,12 @@
     <main>
         <h1>Affine Cipher</h1>
         <div id=input_section>
-        <input id="plainField" type="text" placeholder="Plain Text">
+            <form action = "/upload/affine" method = "POST" 
+            enctype = "multipart/form-data">
+                <input type = "file" name = "file" />
+                <input id="inputFile" type = "submit" value="Submit"/>
+            </form>
+        <input id="plainField" type="text" placeholder="Plain Text" value="{{fileContent}}">
         <input id="keyM" type="text", placeholder="Key M">
         <input id="keyB" type="text", placeholder="Key B">
         <input id="cipherField" type="text" placeholder="Cipher Text">
@@ -32,7 +37,7 @@
             let plain = $("#plainField").val();
             let M = $("#keyM").val();
             let B = $("#keyB").val();
-            $.get("./affine/encrypt", {text: plain, keyM: M, keyB: B}).done(data => {
+            $.get("/affine/encrypt", {text: plain, keyM: M, keyB: B}).done(data => {
                 if (data === "-1") {
                     $("#messageArea").append("<p id='warningMessage' style='color:red'>Kunci M harus relatif prima terhadap 26</p>")
                     return;
@@ -45,7 +50,7 @@
             let cipher = $("#cipherField").val();
             let M = $("#keyM").val();
             let B = $("#keyB").val();
-            $.get("./affine/decrypt", {text: cipher, keyM: M, keyB: B}).done(data => {
+            $.get("/affine/decrypt", {text: cipher, keyM: M, keyB: B}).done(data => {
                 if (data === "-1") {
                     $("#messageArea").append("<p id='warningMessage' style='color:red'>Kunci M harus relatif prima terhadap 26</p>")
                     return;
