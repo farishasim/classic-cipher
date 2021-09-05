@@ -1,4 +1,4 @@
-from cipher.utilities import charToInt, intToChar, formatInput
+from cipher.utilities import charToInt, intToChar, formatInput, arrangeText
 from random import shuffle
 
 # key table
@@ -47,6 +47,59 @@ def fullVigenere():
   print("Your ciphertext: " + c)
   print("Decrypted ciphertext: " + d)
 
+def fullVigenereEncrypt(plaintext:str, keytext:str):
+  getTable()
+  plaintext = formatInput(plaintext)
+  keytext = formatInput(keytext)
+  nk = len(keytext)
+
+  ciphertext = ""
+  i = 0
+  for letter in plaintext:
+    i_col = charToInt(letter)
+    i_row = charToInt(keytext[i % nk])
+    ciphertext += table[i_row][i_col] # stil at question
+    i += 1
+
+  result = {
+    "plaintext": plaintext,
+    "keytext": keytext,
+    "ciphertext": ciphertext,
+    "ciphertext_spaced": arrangeText(ciphertext)
+  }
+  
+  return result
+
+def fullVigenereDecrypt(ciphertext:str, keytext:str):
+  getTable()
+  ciphertext = formatInput(ciphertext)
+  keytext = formatInput(keytext)
+  nk = len(keytext)
+
+  decryptedtext = ""
+  i = 0
+  for letter in ciphertext:
+    i_col = charToInt(letter)
+    i_row = charToInt(keytext[i % nk])
+    
+    row = table[i_row]
+    j = 0
+    for letter_row in row:
+      if letter_row == letter:
+        decryptedtext += intToChar(j)  # stil at question
+        break
+      j += 1
+    
+    i += 1
+
+  result = {
+    "plaintext": decryptedtext,
+    "keytext": keytext,
+    "ciphertext": ciphertext
+  }
+  
+  return result
+
 def generateTable():
   # writes to fullVigenereTable.txt a new randomly generated key table
   table = [[intToChar(j) for j in range(26)] for i in range(26)]
@@ -63,7 +116,7 @@ def generateTable():
     pList.append(temp)
   pList.append("]\n")
 
-  with open("./dump/fullVigenereTable.txt", "w") as file:
+  with open("cipher/dump/fullVigenereTable.txt", "w") as file:
     file.writelines(pList)
 
 def getTable():
@@ -71,7 +124,7 @@ def getTable():
   global table
   table = []
 
-  with open("./dump/fullVigenereTable.txt", "r") as file:
+  with open("cipher/dump/fullVigenereTable.txt", "r") as file:
     text = file.readlines()
 
     for row in text[1: len(text)-1]:
@@ -83,6 +136,36 @@ def getTable():
       table.append(temp)
 
 def showTable():
+  # printout key table to commandLine(sementara ini)
+  # format:
+  #   A B C D E ...
+  # A X D A S C
+  # B L P O M D
+  # ...
+
+  # update table value
+  getTable()
+
+  result = list()
+
+  # first line
+  temp = [' ']
+  for i in range(26):
+    temp.append(intToChar(i))
+  result.append(temp)
+  
+  # next lines
+  for i in range(26):
+    temp = []
+    temp.append(intToChar(i))
+    for j in range(26):
+      temp.append(table[i][j])
+    result.append(temp)
+  
+  return result
+
+# ! text based !
+def showTableText():
   # printout key table to commandLine(sementara ini)
   # format:
   #   A B C D E ...
@@ -109,6 +192,7 @@ def showTable():
   
   return result
 
+# ! text based !
 def fullVigenereMain():
   promptMode = False
   while not promptMode:
@@ -120,7 +204,7 @@ def fullVigenereMain():
     submenu = input("    >>> ")
 
     if submenu == "1":
-      print(showTable())
+      print(showTableText())
     elif submenu == "2":
       generateTable()
     elif submenu == "3":
@@ -128,7 +212,15 @@ def fullVigenereMain():
     else:
       promptMode = True
 
+def emptyResult():
+  return {
+    "plaintext": "",
+    "ciphertext": "",
+    "keytext": ""
+  }
+
 if __name__ == "__main__":
+  getTable()
   fullVigenereMain()
   # generateTable()
   # fullVigenere()

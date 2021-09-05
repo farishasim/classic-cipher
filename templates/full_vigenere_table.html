@@ -1,0 +1,30 @@
+{% extends 'full_vigenere.html' %}
+
+
+{% block showTable %}
+
+<div class='container'>
+  <form action="/vigenere/full/table" method="POST">
+    <a href=# id=generateTable><button type="submit" class='btn btn-secondary'>Generate New Key Table</button></a>
+  </form>
+</div>
+
+
+<table class="table table-striped">
+  {% set header = True %}
+  {% for row in table %}
+    <tr>
+      {% if header %}
+        {% set header = False%}
+        {% for letter in row %}
+          <th style="font-size: 0.6rem; padding:2px">{{ letter }}</th>
+        {% endfor %}
+      {% else %}
+        {% for letter in row %}
+          <td style="font-size: 0.6rem; padding:2px">{{ letter }}</td>
+        {% endfor %}
+      {% endif %}
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -67,14 +67,14 @@
         <h4>Result:</h4>
         <p>Your plaintext: {{ data.plaintext }}</p>
         <p>Your key: {{ data.keytext }}</p>
-        <p>Ciphertext: {{ data.ciphertext }} (<i>{{ data.ciphertext_spaced }}</i>)</p>
+        <p>Ciphertext: <b>{{ data.ciphertext }} (<i>{{ data.ciphertext_spaced }}</i>)</b></p>
       </div>
     {% else %}
       <div class="">
         <h4>Result:</h4>
         <p>Your ciphertext: {{ data.ciphertext }}</p>
         <p>Your key: {{ data.keytext }}</p>
-        <p>Plaintext: {{ data.plaintext }}</p>
+        <p>Plaintext: <b>{{ data.plaintext }}</b></p>
       </div>
     {% endif %}
   {% endif %}

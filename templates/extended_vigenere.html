@@ -1,7 +1,96 @@
 {% extends 'vigenere.html' %}
 
 {% block vigenere %}
-
 <h3>Extended Vigenere</h3>
 
+<div class="container">
+  <form action="/upload-vigenere/extended" method="POST" enctype="multipart/form-data"
+  class="row w-100">
+    <div class="row m-3">
+      {% if encrypt %}
+        <div class="col-sm-3">
+          <input type="radio" name="enc_dec_mode" id="radioEncrypt" value="radioEncrypt" onclick="modeChange('encrypt');" checked="checked">
+          <label for="radioEncrypt">Encrypt</label>
+        </div>
+        <div class="col-sm-3">
+          <input type="radio" name="enc_dec_mode" id="radioDecrypt" value="radioDecrypt" onclick="modeChange('decrypt');">
+          <label for="radioDecrypt">Decrypt</label>
+        </div>
+      {% else %}
+        <div class="col-sm-3">
+          <input type="radio" name="enc_dec_mode" id="radioEncrypt" value="radioEncrypt" onclick="modeChange('encrypt');">
+          <label for="radioEncrypt">Encrypt</label>
+        </div>
+        <div class="col-sm-3">
+          <input type="radio" name="enc_dec_mode" id="radioDecrypt" value="radioDecrypt" onclick="modeChange('decrypt');" checked="checked">
+          <label for="radioDecrypt">Decrypt</label>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="row my-3">
+      <h6 class="col-3">File Input:</h6>
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <input type="file" name="file"/>
+          </div>
+          <div class="col">
+            <input id="inputFile" type="submit"/>
+          </div>
+        </div>
+      </div>
+      <p>filename: {{ data.inputFileName }}</p>
+    </div>
+  </form>
+
+  <form action="/vigenere/extended" method="post" class="row w-100">
+    <div class="row my-3">
+      <h6 class="col-3">Text Input:</h6>
+      <div class="col">
+        <div class="row">
+          <div class="w-100 my-2 d-flex justify-content-start">
+            <input type="text" id="key" name="key" placeholder="key" value="{{ data.keytext }}">
+          </div>
+        </div>
+        <div class="row">
+          <div class="w-100 my-2 d-flex justify-content-start">
+            <input type="text" id="outputFileName" name="outputFileName" placeholder="output file name (without format)" value="{{ data.outputFileName }}">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h6 class="col-3 my-3">File Output:</h6>
+    <div class="col">
+      <p></p>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center">
+      {% if encrypt %}
+        <input id="btn-execute" type="submit" name="enc_dec_mode" value="Encrypt" class="mx-1">
+      {% else %}
+        <input id="btn-execute" type="submit" name="enc_dec_mode" value="Decrypt" class="mx-1">
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<!-- 
+<img src="{{ url_for('static', filename='dump/blue.png') }}" alt="blue.png">
+<img src="{{ url_for('static', filename='dump/alteredImage.png') }}" alt="alteredImage.png">
+<img src="{{ url_for('static', filename='dump/recoveredImage.png') }}" alt="recoveredImage.png">
+ -->
+
+<script type="text/javascript">
+  function modeChange(mode){
+    btn = document.getElementById("btn-execute");
+    if (mode == 'encrypt') {
+      btn.value = "Encrypt";
+    }
+    else if (mode == "decrypt") {
+      btn.value = "Decrypt";
+    }
+  }
+  </script>
 {% endblock %}

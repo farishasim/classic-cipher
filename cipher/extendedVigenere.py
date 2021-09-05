@@ -1,6 +1,8 @@
 from cipher.utilities import formatInput
 import struct
 
+relativeDir = "./static/dump/"
+
 def extendedVigenere(mode: str = "e", filename: str = None):
   # mode: "e" untuk encrypt dan "d" untuk decrypt
 
@@ -14,9 +16,9 @@ def extendedVigenere(mode: str = "e", filename: str = None):
   
   if filename == None:
     if mode == "e":
-      filename = "./dump/blue.png"
+      filename = "./../static/dump/blue.png"
     elif mode == "d":
-      filename = "./dump/alteredImage.png"
+      filename = "./../static/dump/alteredImage.png"
   
   with open(filename, 'rb') as file:
     fileBytes = file.read()
@@ -51,13 +53,119 @@ def extendedVigenere(mode: str = "e", filename: str = None):
     bytes = b"".join(temp)
 
   if mode == "e":
-    with open("./dump/alteredImage.png", "wb") as outputFile:
+    with open("./../static/dump/alteredImage.png", "wb") as outputFile:
       outputFile.write(bytes)
   else:
-    with open("./dump/recoveredImage.png", "wb") as outputFile:
+    with open("./../static/dump/recoveredImage.png", "wb") as outputFile:
       outputFile.write(bytes)
 
-def testOpen(filename = "./dump/blue.png"):
+def extendedVigenereEncrypt(filename:str, keytext:str, outputFileName: str):
+  # !outputFileName adalah masukan teks tanpa format (menyesuakan format input file)!
+  bytes = list()
+  nk = len(keytext)
+  # if filename == None:
+  #   if mode == "e":
+  #     filename = "./../static/dump/blue.png"
+  #   elif mode == "d":
+  #     filename = "./../static/dump/alteredImage.png"
+  
+  print(filename)
+  with open(f"{relativeDir}{filename}", 'rb') as file:
+    fileBytes = file.read()
+    fileBytes = struct.unpack("c" * (len(fileBytes)), fileBytes)
+    
+    temp = list()
+    i = 0
+    # once = True
+    for b in fileBytes:
+      # Convert from bytes...
+      # temp.append(int.from_bytes(b, "big"))
+      
+      # Encrypt/Decrypt
+      # temp.append(shiftASCII(b, k[i % nk], '+'))
+      temp.append(int.from_bytes(b, "big"))
+      temp[i] = (temp[i] + ord(keytext[i % nk])) % 256
+      # to bytes...
+      temp[i] = int.to_bytes(temp[i], 1, "big")
+
+
+      # Convert to bytes...
+      # temp[i] = int.to_bytes(temp[i], 1, "big")
+      i += 1
+    bytes = b"".join(temp)
+
+  fileFormat = filename.split('.')[-1]
+  if outputFileName == None:
+    outputFileName = f"alteredFile.{fileFormat}"
+  else:
+    outputFileName = f"{outputFileName}.{fileFormat}"
+  with open(f"{relativeDir}{outputFileName}", "wb") as outputFile:
+    outputFile.write(bytes)
+  
+  return {
+    "inputFileName": filename,
+    "keytext": keytext,
+    "outputFileName": outputFileName
+  }
+
+def extendedVigenereDecrypt(filename:str, keytext:str, outputFileName:str):
+  # !outputFileName adalah masukan teks tanpa format (menyesuakan format input file)!
+  nk = len(keytext)
+  bytes = list()
+  
+  # if filename == None:
+  #   if mode == "e":
+  #     filename = "./../static/dump/blue.png"
+  #   elif mode == "d":
+  #     filename = "./../static/dump/alteredImage.png"
+  
+  with open(f"{relativeDir}{filename}", 'rb') as file:
+    fileBytes = file.read()
+    fileBytes = struct.unpack("c" * (len(fileBytes)), fileBytes)
+    
+    temp = list()
+    i = 0
+    # once = True
+    for b in fileBytes:
+      # Convert from bytes...
+      # temp.append(int.from_bytes(b, "big"))
+      
+      # Encrypt/Decrypt
+      # temp.append(shiftASCII(b, k[i % nk], '-'))
+      temp.append(int.from_bytes(b, "big"))
+      temp[i] = (temp[i] - ord(keytext[i % nk])) % 256
+      # to bytes...
+      temp[i] = int.to_bytes(temp[i], 1, "big")
+        
+
+      # Convert to bytes...
+      # temp[i] = int.to_bytes(temp[i], 1, "big")
+      i += 1
+    bytes = b"".join(temp)
+
+  fileFormat = filename.split('.')[-1]
+  if outputFileName == None:
+    outputFileName = f"recoveredImage.{fileFormat}"
+  else:
+    outputFileName = f"{outputFileName}.{fileFormat}"
+
+  with open(f"{relativeDir}{outputFileName}", "wb") as outputFile:
+    outputFile.write(bytes)
+  
+  return {
+    "inputFileName": filename,
+    "keytext": keytext,
+    "outputFileName": outputFileName
+  }
+
+def emptyResult(filename=""):
+  return {
+    "inputFileName": filename,
+    "keytext": "",
+    "outputFileName": ""
+  }
+
+def testOpen(filename = "./../static/dump/blue.png"):
   with open(filename, mode='rb') as file: # b is important -> binary
     fileContent = file.read()
     start = struct.unpack("1000c", fileContent[:1000])

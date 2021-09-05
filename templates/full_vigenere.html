@@ -5,7 +5,7 @@
 <h3>Full Vigenere</h3>
 
 <div class="container">
-  <form action="/upload-vigenere/simple" method="POST" enctype="multipart/form-data"
+  <form action="/upload-vigenere/full" method="POST" enctype="multipart/form-data"
   class="row w-100">
     <h6 class="col-3">File Input:</h6>
     <div class="col">
@@ -19,7 +19,7 @@
       </div>
     </div>
   </form>
-  <form action="/vigenere/simple" method="post" class="row w-100">
+  <form action="/vigenere/full" method="post" class="row w-100">
     <div class="row">
       <h6 class = "col-3">Text Input:</h6>
       <div class="col">
@@ -57,17 +57,34 @@
         <h4>Result:</h4>
         <p>Your plaintext: {{ data.plaintext }}</p>
         <p>Your key: {{ data.keytext }}</p>
-        <p>Ciphertext: {{ data.ciphertext }} (<i>{{ data.ciphertext_spaced }}</i>)</p>
+        <p>Ciphertext: <b>{{ data.ciphertext }} (<i>{{ data.ciphertext_spaced }}</i>)</b></p>
       </div>
     {% else %}
       <div class="">
         <h4>Result:</h4>
         <p>Your ciphertext: {{ data.ciphertext }}</p>
         <p>Your key: {{ data.keytext }}</p>
-        <p>Plaintext: {{ data.plaintext }}</p>
+        <p>Plaintext: <b>{{ data.plaintext }}</b></p>
       </div>
     {% endif %}
   {% endif %}
 </div>
+
+{% if request.endpoint == "full_vigenere_page" %}
+  <div class='container'>
+    <form action="/vigenere/full/table" method="GET">
+      <a href=# id=showTable><button type="submit" class='btn btn-default'>Show Key Table</button></a>
+    </form>
+  </div>
+{% elif request.endpoint == "full_vigenere_table" %}
+  <div class='container'>
+    <form action="/vigenere/full" method="GET">
+      <a href=# id=hideTable><button type="submit" class='btn btn-default'>Hide Key Table</button></a>
+    </form>
+  </div>
+{% endif %}
+
+{% block showTable %}
+{% endblock %}
 
 {% endblock %}

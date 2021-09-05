@@ -32,6 +32,8 @@ def autoKeyVigenereMain():
   print("Decrypted ciphertext: " + d)
 
 def autoKeyVigenereEncrypt(plaintext:str, keytext:str):
+  plaintext = formatInput(plaintext)
+  keytext = formatInput(keytext)
   nk = len(keytext)
 
   ciphertext = ""
@@ -53,6 +55,8 @@ def autoKeyVigenereEncrypt(plaintext:str, keytext:str):
   return result
 
 def autoKeyVigenereDecrypt(ciphertext:str, keytext:str):
+  ciphertext = formatInput(ciphertext)
+  keytext = formatInput(keytext)
   nk = len(keytext)
 
   decryptedtext = ""
@@ -72,6 +76,12 @@ def autoKeyVigenereDecrypt(ciphertext:str, keytext:str):
 
   return result
 
+def emptyResult():
+  return {
+    "plaintext": "",
+    "ciphertext": "",
+    "keytext": ""
+  }
 
 if __name__ == "__main__":
   autoKeyVigenereMain()

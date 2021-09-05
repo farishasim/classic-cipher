@@ -63,34 +63,96 @@ def simple_vigenere_page():
         fileContent = session['fileContent']
     return render_template("simple_vigenere.html", data=simpleVigenere.emptyResult(), fileContent=fileContent)
 
-@app.route('/vigenere/autokey')
+@app.route('/vigenere/autokey', methods=["GET", "POST"])
 def auto_key_vigenere_page():
     if request.method == "POST":
         if request.form["enc_dec_mode"] == "Encrypt":
             plainteks = request.form["plainteks"]
             key = request.form["key"]
-            result = autoKeyVigenere.simpleVigenereEncrypt(plainteks, key)
+            result = autoKeyVigenere.autoKeyVigenereEncrypt(plainteks, key)
 
-            return render_template("simple_vigenere.html", data=result, encrypt=True, fileContent="")
+            return render_template("auto_key_vigenere.html", data=result, encrypt=True, fileContent="")
         elif request.form["enc_dec_mode"] == "Decrypt":
             cipherteks = request.form["cipherteks"]
             key = request.form["key"]
-            result = autoKeyVigenere.simpleVigenereDecrypt(cipherteks, key)
+            result = autoKeyVigenere.autoKeyVigenereDecrypt(cipherteks, key)
 
-            return render_template("simple_vigenere.html", data=result, encrypt=False, fileContent="")
+            return render_template("auto_key_vigenere.html", data=result, encrypt=False, fileContent="")
     
     fileContent = ""
     if 'fileContent' in session:
         fileContent = session['fileContent']
-    return render_template("simple_vigenere.html", data=simpleVigenere.emptyResult(), fileContent=fileContent)
+    return render_template("auto_key_vigenere.html", data=autoKeyVigenere.emptyResult(), fileContent=fileContent)
 
-@app.route('/vigenere/full')
+@app.route('/vigenere/full', methods=["GET", "POST"])
 def full_vigenere_page():
-    return render_template("full_vigenere.html")
+    if request.method == "POST":
+        if request.form["enc_dec_mode"] == "Encrypt":
+            plainteks = request.form["plainteks"]
+            key = request.form["key"]
+            result = fullVigenere.fullVigenereEncrypt(plainteks, key)
+            session["full_vigenere"] = result
+            session["full_vigenere_encrypt"] = True
 
-@app.route('/vigenere/extended')
+            return render_template("full_vigenere.html", data=result, encrypt=True, fileContent="")
+        elif request.form["enc_dec_mode"] == "Decrypt":
+            cipherteks = request.form["cipherteks"]
+            key = request.form["key"]
+            print(cipherteks, key)
+            result = fullVigenere.fullVigenereDecrypt(cipherteks, key)
+            session["full_vigenere"] = result
+            session["full_vigenere_encrypt"] = False
+
+            return render_template("full_vigenere.html", data=result, encrypt=False, fileContent="")
+    
+    fileContent = ""
+    if 'fileContent' in session:
+        fileContent = session['fileContent']
+    return render_template("full_vigenere.html", data=fullVigenere.emptyResult(), fileContent=fileContent)
+
+@app.route('/vigenere/full/table', methods=["GET", "POST"])
+def full_vigenere_table():
+    if request.method == "POST":
+        fullVigenere.generateTable()
+    table = fullVigenere.showTable()
+
+    if "full_vigenere" in session:
+        if session["full_vigenere_encrypt"]:
+            return render_template('full_vigenere_table.html', data=session["full_vigenere"], fileContent="", table=table, encrypt=True)
+        else:
+            return render_template('full_vigenere_table.html', data=session["full_vigenere"], fileContent="", table=table, encrypt=False)
+    else:
+        return render_template('full_vigenere_table.html', data=fullVigenere.emptyResult(), fileContent="", table=table)
+
+@app.route('/vigenere/extended', methods=["GET", "POST"])
 def extended_vigenere_page():
-    return render_template("extended_vigenere.html")
+    if request.method == "POST":
+        if request.form["enc_dec_mode"] == "Encrypt":
+            filename = session["vigenere_extended_filename"]
+            key = request.form["key"]
+            outputFileName = request.form["outputFileName"]
+            result = extendedVigenere.extendedVigenereEncrypt(filename, key, outputFileName)
+
+            return render_template("extended_vigenere.html", data=result, encrypt=True)
+        elif request.form["enc_dec_mode"] == "Decrypt":
+            filename = session["vigenere_extended_filename"]
+            key = request.form["key"]
+            outputFileName = request.form["outputFileName"]
+            result = extendedVigenere.extendedVigenereDecrypt(filename, key, outputFileName)
+            
+            return render_template("extended_vigenere.html", data=result, encrypt=False)
+    
+    filename = ""
+    if "vigenere_extended_filename" in session:
+        filename = session["vigenere_extended_filename"]
+    
+    if "vigenere_extended_mode" in session:
+        if session["vigenere_extended_mode"] == "radioEncrypt":
+            return render_template("extended_vigenere.html", data=extendedVigenere.emptyResult(filename), encrypt=True)
+        elif session["vigenere_extended_mode"] == "radioDecrypt":
+            return render_template("extended_vigenere.html", data=extendedVigenere.emptyResult(filename), encrypt=False)
+    
+    return render_template("extended_vigenere.html", data=extendedVigenere.emptyResult(filename), encrypt=True)
 
 
 @app.route('/affine')
@@ -158,7 +220,13 @@ def upload_file(cipher):
 def upload_file_vigenere(vtype):
     if request.method == 'POST':
         if vtype == "extended":
-            pass
+            f = request.files['file']
+            filename = f.filename
+            f.save(f"./static/dump/{filename}")
+            session['vigenere_extended_filename'] = filename
+            session['vigenere_extended_mode'] = request.form["enc_dec_mode"]
+            return redirect(url_for('extended_vigenere_page'))
+        
         f = request.files['file']
         f.save(f"./cipher/dump/{vtype}-input.txt")
         f = open(f"./cipher/dump/{vtype}-input.txt")
@@ -171,7 +239,9 @@ def upload_file_vigenere(vtype):
             session['fileContent'] = fileContent
             return redirect(url_for('auto_key_vigenere_page', fileContent=fileContent))
         if vtype == "full":
-            return redirect(url_for('full_vigenere_page', fileContent=f.read()))
+            fileContent = f.read()
+            session['fileContent'] = fileContent
+            return redirect(url_for('full_vigenere_page', fileContent=fileContent))
         # if vtype == "extended":
         #     return redirect(url_for(extended, fileContent=f.read()))
         # return redirect(url_for())
