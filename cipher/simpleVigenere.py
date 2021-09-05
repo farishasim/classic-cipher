@@ -1,4 +1,4 @@
-from processor import shiftAlphabet, formatInput
+from cipher.utilities import shiftAlphabet, formatInput, arrangeText
 
 def simpleVigenereMain():
   p = formatInput(input("Input plainteks: "))
@@ -42,8 +42,15 @@ def simpleVigenereEncrypt(plaintext: str, keytext:str):
   for letter in plaintext:
     ciphertext += shiftAlphabet(letter, keytext[i % nk], '+')
     i += 1
-  
-  return ciphertext
+
+  result = {
+    "plaintext": plaintext,
+    "keytext": keytext,
+    "ciphertext": ciphertext,
+    "ciphertext_spaced": arrangeText(ciphertext)
+  }
+
+  return result
 
 def simpleVigenereDecrypt(ciphertext: str, keytext:str):
   ciphertext = formatInput(ciphertext)
@@ -55,8 +62,21 @@ def simpleVigenereDecrypt(ciphertext: str, keytext:str):
   for letter in ciphertext:
     decryptedtext += shiftAlphabet(letter, keytext[i % nk], '-')
     i += 1
+
+  result = {
+    "plaintext": decryptedtext,
+    "keytext": keytext,
+    "ciphertext": ciphertext
+  }
   
-  return decryptedtext
+  return result
+
+def emptyResult():
+  return {
+    "plaintext": "",
+    "ciphertext": "",
+    "keytext": ""
+  }
 
 if __name__ == "__main__":
   simpleVigenereMain()

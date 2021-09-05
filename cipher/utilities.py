@@ -32,6 +32,20 @@ def formatInput(inp: str) -> str:
   # UPPERCASE
   return inp.upper()
 
+def arrangeText(input: str) -> str:
+  # Memisahkan teks string ke dalam kata-kata dengan 5 huruf
+  result = ""
+  i = 0
+  for letter in input:
+    i += 1
+
+    result += letter
+
+    if i == 5:
+      result += " "
+      i = 0
+  return result
+
 
 # def shiftASCII(p: str, k: str, mode: str):
 #   # Sama dengan shift alphabet, tapi include semua 256 karakter ASCII

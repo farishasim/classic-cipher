@@ -1,4 +1,4 @@
-from processor import formatInput
+from cipher.utilities import formatInput
 import struct
 
 def extendedVigenere(mode: str = "e", filename: str = None):

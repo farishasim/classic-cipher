@@ -1,4 +1,4 @@
-from processor import charToInt, intToChar, formatInput
+from cipher.utilities import charToInt, intToChar, formatInput
 from random import shuffle
 
 # key table
