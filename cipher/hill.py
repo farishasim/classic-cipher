@@ -78,7 +78,12 @@ def decrypt(ciphertext, key):
     return encrypt(ciphertext, reversedkey)
 
 def keycheck(key):
-    return np.linalg.det(key) != 0
+    det = int(np.linalg.det(key))
+    try :
+        pow(det, -1, N)
+    except ValueError:
+        return False
+    return det != 0
 
 if __name__ == "__main__":
     choice = input()
