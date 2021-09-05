@@ -47,7 +47,7 @@ def encrypt(plaintext, key):
     ciphertext = ""
     plaintext = preprocess(plaintext)
     keysize = len(key)
-    plaintext += 'Z'*((3-(len(plaintext)%3))%3)
+    plaintext += 'Z'*((keysize-(len(plaintext)%keysize))%keysize)
     p = 0
     n = len(plaintext)
     while p < n:
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     choice = input()
     if choice == "c":
         plaintext = input("Masukkan plaintext: ")
-        KEY = [[1,0],[0,1]]
+        # KEY = [[1,0,1,0],[1,0,1,0],[1,0,1,0],[1,0,1,0]]
         ciphertext = encrypt(plaintext, KEY)
         print(ciphertext)
     else :
