@@ -30,23 +30,36 @@ N = 26
 
 def preprocess(text):
     # remove punctuation
-    text = "".join(c for c in text if c not in ' ,.?!(){}')
+    # text = "".join(c for c in text if c not in ' ,.?!(){}')
     # to uppercase
     return text.upper()
 
 def encrypt(plaintext, m, b):
+    try: # cek apakah m relatif prima terhadap 26
+        pow(m, -1, N);
+    except ValueError:
+        return "-1"
     ciphertext = ""
     plaintext = preprocess(plaintext)
     for p in plaintext:
-        ciphertext += ALFABET[ (ALFABET.index(p)*m + b) % N ]
+        if ALFABET.count(p) != 0 :
+            ciphertext += ALFABET[ (ALFABET.index(p)*m + b) % N ]
+        else :
+            ciphertext += p
     return ciphertext
 
 def decrypt(ciphertext, m, b):
+    try: # cek apakah m relatif prima terhadap 26
+        dec = pow(m, -1, N);
+    except ValueError:
+        return "-1"
     plaintext = ""
     ciphertext = preprocess(ciphertext)
-    dec = pow(m, -1, N)
     for c in ciphertext:
-        plaintext += ALFABET[ ((ALFABET.index(c)-10)*dec) % N ]
+        if ALFABET.count(c) != 0 :
+            plaintext += ALFABET[ ((ALFABET.index(c)-b)*dec) % N ]
+        else :
+            plaintext += c
     return plaintext
 
 if __name__ == "__main__":
