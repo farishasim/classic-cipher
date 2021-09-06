@@ -20,7 +20,11 @@ def playfair_page():
 def playfair_encrypt():
     plain = request.args.get("text")
     key = request.args.get("key")
-    return playfair.encrypt(plain, key)
+    cipher = playfair.encrypt(plain, key)
+    file = open("output.txt", "w")
+    file.write(cipher)
+    file.close()
+    return cipher
 
 @app.route('/playfair/decrypt')
 def playfair_decrypt():
@@ -164,7 +168,11 @@ def affine_encrypt():
     plain = request.args.get("text")
     m = int(request.args.get("keyM"))
     b = int(request.args.get("keyB"))
-    return affine.encrypt(plain, m, b)
+    cipher = affine.encrypt(plain, m, b)
+    file = open("output.txt", "w")
+    file.write(cipher)
+    file.close()
+    return cipher
 
 @app.route('/affine/decrypt')
 def affine_decrypt():
@@ -195,7 +203,12 @@ def hill_encrypt():
     key = request.form.get("key")
     key = json.loads(key)
     keymat = [[int(key[i*size+j]) for j in range(size)] for i in range(size)]
-    return hill.encrypt(plain, keymat)
+
+    cipher = hill.encrypt(plain, keymat)
+    file = open("output.txt", "w")
+    file.write(cipher)
+    file.close()
+    return cipher
 
 @app.route("/hill/decrypt", methods=["POST"])
 def hill_decrypt():
