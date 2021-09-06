@@ -1,3 +1,5 @@
+from cipher.utilities import shiftAlphabet, formatInput, arrangeText
+
 ALFABET = [
     'A',
     'B',
@@ -60,7 +62,8 @@ def d_bigram(p1,p2,mat):
 
 def preprocess(text, key):
     # strip all blanks, j, J an punctuation.
-    text = "".join(c for c in text if c not in ' ,.?!(){}')
+    text = formatInput(text)
+    key = formatInput(text)
     key = "".join(c for c in key if c not in ' ,.?!(){}jJ')
     # to uppercase
     text = text.upper()
