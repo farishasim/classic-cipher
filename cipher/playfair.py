@@ -70,7 +70,7 @@ def preprocess(text, key):
     # remove multiple occurences
     newkey = ""
     for c in key:
-        if c not in newkey:
+        if c not in newkey and c in ALFABET :
             newkey += c
     key = newkey
     # add all remaining alfabet
