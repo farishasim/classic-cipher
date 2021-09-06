@@ -59,6 +59,11 @@
         <p>Your key: {{ data.keytext }}</p>
         <p>Ciphertext: <b>{{ data.ciphertext }} (<i>{{ data.ciphertext_spaced }}</i>)</b></p>
       </div>
+      <script>
+        (() => {
+          alert("Ciphertext saved to /cipher/dump/auto-key-vigenere-cipher.txt")
+        });
+      </script>
     {% else %}
       <div class="">
         <h4>Result:</h4>

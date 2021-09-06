@@ -52,6 +52,9 @@ def autoKeyVigenereEncrypt(plaintext:str, keytext:str):
     "ciphertext_spaced": arrangeText(ciphertext)
   }
 
+  with open("./cipher/dump/auto-key-vigenere-cipher.txt", "w") as file:
+    file.write(arrangeText(ciphertext))
+
   return result
 
 def autoKeyVigenereDecrypt(ciphertext:str, keytext:str):
