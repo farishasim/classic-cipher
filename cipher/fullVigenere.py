@@ -67,6 +67,9 @@ def fullVigenereEncrypt(plaintext:str, keytext:str):
     "ciphertext": ciphertext,
     "ciphertext_spaced": arrangeText(ciphertext)
   }
+
+  with open("./cipher/dump/full-vigenere-cipher.txt", "w") as file:
+    file.write(arrangeText(ciphertext))
   
   return result
 

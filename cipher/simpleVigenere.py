@@ -50,6 +50,9 @@ def simpleVigenereEncrypt(plaintext: str, keytext:str):
     "ciphertext_spaced": arrangeText(ciphertext)
   }
 
+  with open("./cipher/dump/simple-vigenere-cipher.txt", "w") as file:
+    file.write(arrangeText(ciphertext))
+
   return result
 
 def simpleVigenereDecrypt(ciphertext: str, keytext:str):
