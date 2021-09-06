@@ -62,8 +62,9 @@ def d_bigram(p1,p2,mat):
 
 def preprocess(text, key):
     # strip all blanks, j, J an punctuation.
-    text = formatInput(text)
-    key = formatInput(text)
+    # text = formatInput(text)
+    # key = formatInput(text)
+    text = "".join(c for c in text if c not in ' ,.?!(){}-+_')
     key = "".join(c for c in key if c not in ' ,.?!(){}jJ')
     # to uppercase
     text = text.upper()
@@ -73,7 +74,7 @@ def preprocess(text, key):
     # remove multiple occurences
     newkey = ""
     for c in key:
-        if c not in newkey and c in ALFABET :
+        if c not in newkey:
             newkey += c
     key = newkey
     # add all remaining alfabet
