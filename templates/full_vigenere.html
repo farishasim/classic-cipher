@@ -60,9 +60,9 @@
         <p>Ciphertext: <b>{{ data.ciphertext }} (<i>{{ data.ciphertext_spaced }}</i>)</b></p>
       </div>
       <script>
-        (() => {
+        window.onload = function () {
           alert("Ciphertext saved to /cipher/dump/full-vigenere-cipher.txt")
-        });
+        }
       </script>
     {% else %}
       <div class="">
