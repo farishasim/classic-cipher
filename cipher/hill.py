@@ -1,4 +1,5 @@
 import numpy as np
+from cipher.utilities import shiftAlphabet, formatInput, arrangeText
 
 ALFABET = [
     'A',
@@ -39,7 +40,8 @@ N = 26
 
 def preprocess(text):
     # remove punctuation
-    text = "".join(c for c in text if c not in ' ,.?!(){}')
+    # text = "".join(c for c in text if c not in ' ,.?!(){}')
+    text = formatInput(text)
     # to uppercase
     return text.upper()
 
